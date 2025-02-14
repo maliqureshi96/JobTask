@@ -1,102 +1,121 @@
 const Task = require("../models/task");
+const User = require("../models/user");
 const Joi = require("joi");
-
-// Validation Schema for Task
-const taskSchema = Joi.object({
-  title: Joi.string().min(3).max(100).required(),
-  description: Joi.string().max(500),
-  completed: Joi.boolean(),
-});
+const mongoose = require("mongoose");
 
 const taskController = {
-  // 🔹 Create a new task
-  async create(req, res, next) {
-    const { error } = taskSchema.validate(req.body);
-    if (error) return next(error);
+    // ✅ Create a new task
+    async createTask(req, res, next) {
+        const taskSchema = Joi.object({
+            title: Joi.string().required(),
+            description: Joi.string().allow(""),
+            completed: Joi.boolean(),
+            userId: Joi.string().required(),
+        });
 
-    try {
-      const { title, description, completed } = req.body;
-      const userId = req.user._id; // Extracted from JWT middleware
+        const { error } = taskSchema.validate(req.body);
+        if (error) return res.status(400).json({ message: error.details[0].message });
 
-      const newTask = new Task({
-        title,
-        description,
-        completed: completed || false,
-        userId,
-      });
+        const { title, description, completed, userId } = req.body;
 
-      const savedTask = await newTask.save();
-      return res.status(201).json({ message: "Task created successfully", task: savedTask });
-    } catch (err) {
-      return next(err);
-    }
-  },
+        try {
+            const task = new Task({ title, description, completed, userId });
+            await task.save();
 
-  // 🔹 Get all tasks for logged-in user
-  async getAll(req, res, next) {
-    try {
-      const userId = req.user._id;
-      const tasks = await Task.find({ userId }).sort({ createdAt: -1 });
+            await User.findByIdAndUpdate(userId, { $push: { tasks: task._id } });
 
-      return res.status(200).json(tasks);
-    } catch (err) {
-      return next(err);
-    }
-  },
+            return res.status(201).json({ message: "Task created successfully", task });
+        } catch (err) {
+            return res.status(500).json({ message: "Internal server error" });
+        }
+    },
 
-  // 🔹 Get task by ID
-  async getById(req, res, next) {
-    try {
-      const { id } = req.params;
-      const userId = req.user._id;
+    // ✅ Get all tasks for a user
+    async getUserTasks(req, res, next) {
+        const { userId } = req.params;
 
-      const task = await Task.findOne({ _id: id, userId });
-      if (!task) return res.status(404).json({ message: "Task not found" });
+        try {
+            const tasks = await Task.find({ userId }).sort({ createdAt: -1 });
+            return res.status(200).json(tasks);
+        } catch (err) {
+            return res.status(500).json({ message: "Internal server error" });
+        }
+    },
 
-      return res.status(200).json(task);
-    } catch (err) {
-      return next(err);
-    }
-  },
+    // ✅ Get a single task
+    async getTask(req, res, next) {
+        const { id } = req.params;
 
-  // 🔹 Update task by ID
-  async update(req, res, next) {
-    const { error } = taskSchema.validate(req.body);
-    if (error) return next(error);
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid task ID" });
+        }
 
-    try {
-      const { id } = req.params;
-      const userId = req.user._id;
-      const { title, description, completed } = req.body;
+        try {
+            const task = await Task.findById(id);
+            if (!task) return res.status(404).json({ message: "Task not found" });
 
-      const updatedTask = await Task.findOneAndUpdate(
-        { _id: id, userId },
-        { title, description, completed },
-        { new: true, runValidators: true }
-      );
+            return res.status(200).json(task);
+        } catch (err) {
+            return res.status(500).json({ message: "Internal server error" });
+        }
+    },
 
-      if (!updatedTask) return res.status(404).json({ message: "Task not found or unauthorized" });
+    // ✅ Update a task
+    async updateTask(req, res, next) {
+        const { id } = req.params;
 
-      return res.status(200).json({ message: "Task updated successfully", task: updatedTask });
-    } catch (err) {
-      return next(err);
-    }
-  },
+        // 🔹 Validate Task ID
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid task ID" });
+        }
 
-  // 🔹 Delete task by ID
-  async delete(req, res, next) {
-    try {
-      const { id } = req.params;
-      const userId = req.user._id;
+        // 🔹 Validate Update Fields
+        const taskSchema = Joi.object({
+            title: Joi.string().min(3).max(100),
+            description: Joi.string().allow(""),
+            completed: Joi.boolean(),
+        });
 
-      const deletedTask = await Task.findOneAndDelete({ _id: id, userId });
-      if (!deletedTask) return res.status(404).json({ message: "Task not found or unauthorized" });
+        const { error } = taskSchema.validate(req.body);
+        if (error) return res.status(400).json({ message: error.details[0].message });
 
-      return res.status(200).json({ message: "Task deleted successfully" });
-    } catch (err) {
-      return next(err);
-    }
-  },
+        try {
+            // 🔹 Check if Task Exists
+            const existingTask = await Task.findById(id);
+            if (!existingTask) return res.status(404).json({ message: "Task not found" });
+
+            // 🔹 Update Task
+            // const updatedTask = await Task.findByIdAndUpdate(id, req.body, { new: true });
+            // ✅ Ensure updateTask allows updating only specific fields
+const updatedTask = await Task.findByIdAndUpdate(id, { $set: req.body }, { new: true });
+
+            return res.status(200).json({ message: "Task updated successfully", updatedTask });
+
+        } catch (err) {
+            console.error("Update Error:", err);
+            return res.status(500).json({ message: "Something went wrong while updating." });
+        }
+    },
+
+    // ✅ Delete a task
+    async deleteTask(req, res, next) {
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid task ID" });
+        }
+
+        try {
+            const task = await Task.findByIdAndDelete(id);
+            if (!task) return res.status(404).json({ message: "Task not found" });
+
+            await User.findByIdAndUpdate(task.userId, { $pull: { tasks: task._id } });
+
+            return res.status(200).json({ message: "Task deleted successfully" });
+        } catch (err) {
+            return res.status(500).json({ message: "Internal server error" });
+        }
+    },
 };
 
 module.exports = taskController;
