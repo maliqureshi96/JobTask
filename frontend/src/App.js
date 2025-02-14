@@ -17,99 +17,60 @@ import Loader from "./components/Loader/Loader";
 
 function App() {
   const isAuth = useSelector(state => state.user.auth);
-
   const loading = useAutoLogin();
 
-  return loading ? <Loader text='...'/> : (
+  return loading ? <Loader text="Loading..." /> : (
     <div className={styles.container}>
       <BrowserRouter>
         <div className={styles.layout}>
           <Navbar />
           <Routes>
-            <Route
-              path="/"
-              exact
-              element={
-                <div className={styles.main}>
-                  <Home />
-                </div>
-              }
-            />
+            {/* ✅ Home Page */}
+            <Route path="/" element={<div className={styles.main}><Home /></div>} />
 
-            <Route
-              path="task"
-              exact
+            {/* ✅ Protected Routes */}
+            <Route 
+              path="/tasks" 
               element={
                 <Protected isAuth={isAuth}>
-                  <div className={styles.main}>
-                    <Task />
-                  </div>
+                  <div className={styles.main}><Task /></div>
                 </Protected>
-              }
+              } 
             />
 
-            <Route
-              path="task/:id"
-              exact
+            <Route 
+              path="/task/:id" 
               element={
                 <Protected isAuth={isAuth}>
-                  <div className={styles.main}>
-                    <TaskDetails />
-                  </div>
+                  <div className={styles.main}><TaskDetails /></div>
                 </Protected>
-              }
+              } 
             />
 
-            <Route
-              path="task-update/:id"
-              exact
+            <Route 
+              path="/task-update/:id" 
               element={
                 <Protected isAuth={isAuth}>
-                  <div className={styles.main}>
-                    <UpdateTask />
-                  </div>
+                  <div className={styles.main}><UpdateTask /></div>
                 </Protected>
-              }
+              } 
             />
 
-            <Route
-              path="submit"
-              exact
+            <Route 
+              path="/submit" 
               element={
                 <Protected isAuth={isAuth}>
-                  <div className={styles.main}>
-                    <SubmitTask />
-                  </div>
+                  <div className={styles.main}><SubmitTask /></div>
                 </Protected>
-              }
+              } 
             />
 
-            <Route
-              path="signup"
-              exact
-              element={
-                <div className={styles.main}>
-                  <Signup />
-                </div>}
-            />
+            {/* ✅ Auth Routes */}
+            <Route path="/signup" element={<div className={styles.main}><Signup /></div>} />
+            <Route path="/login" element={<div className={styles.main}><Login /></div>} />
 
-            <Route
-              path="login"
-              exact
-              element={<div className={styles.main}>
-                <Login />
-              </div>}
-            />
-
-            <Route
-              path="*"
-              element={
-                <div className={styles.main}>
-                  <Error />
-                </div>
-              }
-            />
-
+            {/* ✅ 404 Page */}
+            <Route path="*" element={<div className={styles.main}><Error /></div>} />
           </Routes>
           <Footer />
         </div>

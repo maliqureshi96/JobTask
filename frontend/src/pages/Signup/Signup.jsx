@@ -72,7 +72,7 @@ function Signup() {
 
     return (
         <div className={styles.signupWrapper}>
-            <div className={styles.signupHeader}>
+            <div className={styles.signupHeader} >
                 Create an account
             </div>
             <TextInput
@@ -145,7 +145,7 @@ function Signup() {
                 }
             >Sign Up</button>
 
-            <span>Already have an account? <button className={styles.login} onClick={() => navigate('/login')}>Log In</button></span>
+            <span style={{ color: "white" }}>Already have an account? <button className={styles.login} onClick={() => navigate('/login')}>Log In</button></span>
 
             {error !== "" ? <p className={styles.errorMessage}>{error}</p> : ""}
         </div>

@@ -3,7 +3,18 @@
     justify-content: center;
     align-items: center;
     gap: 50px;
-    margin: 10px 50px;
+    background-color: rgb(35, 35, 35);
+    border-radius: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-top: 48px;
+    height: 70vh;
+    width: 80%;
+}
+
+.taskDetailsLayout{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .left{
@@ -12,7 +23,7 @@
     width: 40%;
     justify-content: space-evenly;
     align-items: center;
-    padding: 25px 0;;;
+    padding: 25px 0;
 }
 
 .meta{
@@ -21,19 +32,12 @@
     justify-content: flex-start;
 }
 
-.photo{
-    margin: 10px auto;
-}
-
-.photo img{
-    border-radius: 10px;
-}
 
 .controls{
     display: flex;
     width: 100%;
-    justify-content: flex-end;
-    margin-top: 20px;
+    justify-content: center;
+    margin-top: 30px;
 }
 
 .right{
@@ -54,6 +58,8 @@
     cursor: pointer;
     font-weight: bold;
     height: fit-content;
+    height: 4vh;
+    width: 8vh;
 }
 
 .editButton:hover {
@@ -71,42 +77,14 @@
     cursor: pointer;
     font-weight: bold;
     height: fit-content;
+    height: 4vh;
+    width: 8vh;
 }
 
 .deleteButton:hover {
     background-color: #e01822;
 }
 
-.postCommentButton{
-    background-color: #3861fb;
-    color: #fff;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    font-size: 15px;
-    padding: 10px 40px;
-    height: fit-content;
-    border-radius: 10px;
-}
+h1, p{
 
-.postCommentButton:hover{
-    background-color: #1f4ffd;
-}
-
-.input{
-    border: none;
-    padding: 10px 20px;
-    color: #bebcc0;
-    font-size: 18px;
-    border-radius: 10px;
-    outline: none;
-    margin: 15px 10px;
-    border:  1px solid #fff;
-    flex: 1;
-}
-
-.postComment{
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }

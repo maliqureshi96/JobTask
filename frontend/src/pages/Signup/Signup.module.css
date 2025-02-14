@@ -1,18 +1,29 @@
 .signupWrapper{
-    margin: 20px auto;
-    width: 80vw;
+    margin: 0 auto;
+    width: 80%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    background-color: rgb(35, 35, 35);
+    border-radius: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-top: 48px;
+    height: 70vh;
 }
 
 .signupHeader{
-    font-size: 48px;
+    width: 30%;
+    background-color: rgb(255, 255, 255);
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    border-radius: 50px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    font-size: 2rem;
     font-weight: bold;
-    width: inherit;
-    text-align: center;
-    margin-bottom: 20px;
 }
 
 .signupButton{
@@ -20,7 +31,7 @@
     color: white;
     border: none;
     outline: none;
-    width: 30%;
+    width: 27%;
     border-radius: 10px;
     padding: 15px 30px;
     cursor: pointer;
@@ -35,12 +46,15 @@
 }
 
 .login{
-    margin-top: 50px;
+    margin-top: 10px;
     margin-left: 10px;
-    color: #16c784;
+    color: black;
+    height: 5vh;
+    width: 10vh;
     font-size: 18px;
     cursor: pointer;
     outline: none;
+    background-color: #16c784;
 }
 
 .errorMessage{

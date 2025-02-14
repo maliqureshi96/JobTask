@@ -79,7 +79,7 @@ function Login() {
   Log In
 </button>
 
-      <span>
+      <span style={{ color: "white" }}>
         Don't have an account?{" "}
         <button
           className={styles.createAccount}

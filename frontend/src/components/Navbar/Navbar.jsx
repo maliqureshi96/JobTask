@@ -28,7 +28,7 @@ function Navbar() {
 
 
                 <NavLink
-                    to='Task'
+                    to='Tasks'
                     className={({ isActive }) => isActive ? styles.activeStyle : styles.inActiveStyle}
                 >Tasks</NavLink>
 

@@ -1,38 +1,45 @@
 .wrapper{
     margin: 0 auto;
-    width: 80vw;
+    width: 80%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    background-color: rgb(35, 35, 35);
+    border-radius: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-top: 48px;
+    height: 70vh;
 }
 
 .header{
-    font-size: 48px;
-    font-weight: bold;
-    width: inherit;
-    text-align: center;
-    margin: 20px 0;
+    width: 55%;
+    background-color: rgb(255, 255, 255);
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    border-radius: 50px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+.header h2{
+    color: black;
+    font-size: 2rem;
+
 }
 
 .content{
     padding: 18px 30px;
     margin: 15px;
-    width: 60%;
+    width: 51%;
     outline: none;
     border-radius: 10px;
     border: px solid #fff;
     font-size: 20px;
     min-height: 200px;
-}
-
-.photoPrompt{
-    display: flex;
-    font-size: 20px;
-    justify-content: center;
-    gap: 50px;
-    width: 60%;
-    align-items: center;
 }
 
 .submit{

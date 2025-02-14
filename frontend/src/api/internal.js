@@ -9,121 +9,86 @@ const api = axios.create({
 });
 
 export const login = async (data) => {
-    let response;
     try {
-        response = await api.post('/login', data);
-    } catch (error) {
-        return error;
-    }
-
-    return response;
-};
-
-export const signup = async (data) =>{
-    let response;
-
-    try {
-        response = await api.post('/register', data);
+        return await api.post('/login', data);
     } catch (error) {
         return error.response;
     }
-
-    return response;
 };
 
-export const signout = async() =>{
-    let response;
-
+export const signup = async (data) => {
     try {
-        response = await api.post('/logout');
+        return await api.post('/register', data);
     } catch (error) {
-        return error;
+        return error.response;
     }
-    return response;
 };
 
-export const getAllTasks = async () => {
-    let response;
-
+export const signout = async () => {
     try {
-        response = await api.get('/task/all');
+        return await api.post('/logout');
     } catch (error) {
-        
+        return error.response;
     }
-    return response;
-}
+};
+
+export const getUserTasks = async (userId) => {
+    try {
+        return await api.get(`/tasks/${userId}`);
+    } catch (error) {
+        return error.response;
+    }
+};
 
 export const submitTask = async (data) => {
-    let response;
-
     try {
-        response = await api.post('/task', data);
+        return await api.post('/task', data);
     } catch (error) {
         return error.response;
     }
-
-    return response;
 };
 
-export const getTaskById = async(id) =>{
-    let response;
-
+export const getTaskById = async (id) => {
     try {
-        response = await api.get(`/task/${id}`);
-
+        return await api.get(`/task/${id}`);
     } catch (error) {
-        return error;
+        return error.response;
     }
-
-    return response;
 };
 
-
-export const deleteTask = async (id) =>{
-    let response;
-
+export const updateTask = async (id, data) => {
     try {
-        response = await api.delete(`/task/${id}`);
+        return await api.put(`/task/${id}`, data);
     } catch (error) {
-        return error;
+        return error.response;
     }
-    return response;
 };
 
-export const updateTask = async(id, data) => {
-    let response;
-
+export const deleteTask = async (id) => {
     try {
-        response = await api.put(`/task/${id}`, data);
+        return await api.delete(`/task/${id}`);
     } catch (error) {
-        return error;
+        return error.response;
     }
-    return response;
 };
 
-// auto token refresh
-
-// protected-resource -> 401
-// /refresh -> authenthicated state
-// /protected-resource
-
+// Auto token refresh interceptor
 api.interceptors.response.use(
     config => config,
     async (error) => {
         const originalReq = error.config;
-
-        if((error.response.status === 401 || error.response.status === 500 ) && originalReq && !originalReq._isRetry){
+        
+        if ((error.response.status === 401 || error.response.status === 500) && originalReq && !originalReq._isRetry) {
             originalReq._isRetry = true;
-
+            
             try {
                 await axios.get(`${process.env.REACT_APP_INTERNAL_API_PATH}/refresh`, {
-                    withCredentials:true
+                    withCredentials: true
                 });
-
-                return api.request(originalReq)
-            } catch (error) {
-                return error;
+                return api.request(originalReq);
+            } catch (err) {
+                return err.response;
             }
         }
     }
-)
+);
